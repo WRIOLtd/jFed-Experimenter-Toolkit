@@ -1,0 +1,28 @@
+version: 1.0-basic
+rspec: iot.rspec
+
+  
+  
+ansible:    
+   host: 
+        type: EXISTING
+        name: ansible
+
+        upload: 
+         - bundled: deployment
+         - bundled: sensor-ng
+        execute: 
+         - bundled: enable-internet.sh
+           sudo: true
+         - direct: |
+             #!/bin/bash
+             whoami
+               
+             cd deployment
+             chmod +x install-ansible.sh
+             sudo ./install-ansible.sh
+             
+
+   playbook:     
+     - path: sensor-ng/deploy.yml
+     - path: sensor-ng/deploy-test.yml
