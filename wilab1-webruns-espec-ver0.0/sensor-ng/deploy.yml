@@ -1,0 +1,35 @@
+- hosts: sensor
+  vars:
+    - "border_router_mote_device": "/dev/ttyUSB0"
+    - "coap_server_mote_device": "/dev/ttyUSB1"
+  tasks:
+    #Install dependencies
+  
+    - name: "Install GIT"
+      become: True
+      apt:
+        name: git
+        
+    - name: "Install compiler"
+      become: True
+      apt:
+        pkg: gcc-arm-none-eabi 
+        state: present         
+        
+    - name: "Install yepkit dependencies"
+      become: True
+      apt: 
+        name: libhidapi-libusb0
+    
+    # get, compile and flash firmware
+    - name: "Get Contiki-ng source"
+      become: True
+      git:     
+        repo: https://github.com/twalcari/contiki-ng.git
+        dest: /opt/contiki-ng
+    
+    - name: "Build tunslip6"
+      become: True
+      make: 
+        chdir: /opt/contiki-ng/tools/serial-io
+        target: tunslip6                          

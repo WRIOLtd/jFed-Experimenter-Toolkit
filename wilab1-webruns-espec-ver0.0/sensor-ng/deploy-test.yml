@@ -1,0 +1,57 @@
+- hosts: sensor
+  vars:
+    - "border_router_mote_device": "/dev/ttyUSB0"
+    - "coap_server_mote_device": "/dev/ttyUSB1"
+  tasks:
+  
+    - name: "Install Java"
+      become: True
+      apt:
+        name: openjdk-8-jre
+        
+    - name: "Download CoAP Plugtest client"
+      become: True
+      get_url: 
+        url: http://central.maven.org/maven2/org/eclipse/californium/cf-plugtest-client/1.0.0-M2/cf-plugtest-client-1.0.0-M2.jar
+        dest: /opt/cf-plugtest-client-1.0.0-M2.jar
+        
+    - name: "Download CoAP client"
+      become: True
+      get_url: 
+        url: http://central.maven.org/maven2/org/eclipse/californium/cf-client/1.0.0-M3/cf-client-1.0.0-M3.jar
+        dest: /opt/cf-client-1.0.0-M3.jar
+
+    - name: "Upload border script"
+      become: True
+      copy: 
+        src: border.sh
+        dest: /opt/border.sh
+        mode: 0755
+
+    - name: "Upload cycle power script"
+      become: True
+      copy: 
+        src: cycle-power-motes.sh
+        dest: /opt/cycle-power-motes.sh
+        mode: 0755        
+
+    - name: "Get WebRuns source"
+      become: True
+      git:     
+        repo: https://github.com/YAS-CODE/Webruns-Gateway-release.git
+        dest: /opt/Webruns-Gateway-release
+
+    - name: "Build and upload Toggle to mote on {{ border_router_mote_device }}"
+      become: True
+      make: 
+        chdir: /opt/Webruns-Gateway-release/ver0.0/toggle-shell
+        target: toggle-shell.upload
+        params:
+          TARGET: "zoul"
+          BOARD: remote-revb          
+          MOTES: "{{ border_router_mote_device }}"
+
+    - shell: "sudo chmod 775 /opt/Webruns-Gateway-release/ver0.0/Gateways;( ( sudo nohup /opt/Webruns-Gateway-release/ver0.0/Gateways 1>/dev/null 2>&1 ) & )"
+      async: 5
+      poll: 0
+
