@@ -9,18 +9,6 @@
       apt:
         name: openjdk-8-jre
         
-    - name: "Download CoAP Plugtest client"
-      become: True
-      get_url: 
-        url: http://central.maven.org/maven2/org/eclipse/californium/cf-plugtest-client/1.0.0-M2/cf-plugtest-client-1.0.0-M2.jar
-        dest: /opt/cf-plugtest-client-1.0.0-M2.jar
-        
-    - name: "Download CoAP client"
-      become: True
-      get_url: 
-        url: http://central.maven.org/maven2/org/eclipse/californium/cf-client/1.0.0-M3/cf-client-1.0.0-M3.jar
-        dest: /opt/cf-client-1.0.0-M3.jar
-
     - name: "Upload border script"
       become: True
       copy: 
