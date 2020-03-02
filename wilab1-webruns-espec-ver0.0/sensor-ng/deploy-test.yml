@@ -1,13 +1,35 @@
-- hosts: sensor
+- hosts: sensor  
   vars:
     - "border_router_mote_device": "/dev/ttyUSB0"
     - "coap_server_mote_device": "/dev/ttyUSB1"
   tasks:
   
+    - name: Update and upgrade apt packages
+      become: true
+      ignore_errors: yes
+      apt:        
+        update_cache: yes
+        cache_valid_time: 86400 #One day              
+
+    - name: "Install libmosquitto-dev"
+      become: True
+      apt:
+        name: libmosquitto-dev
+
+    - name: "Install libmosquittopp-dev"
+      become: True
+      apt:
+        name: libmosquittopp-dev
+
+    - name: "Install libssl-dev"
+      become: True
+      apt:
+        name: libssl-dev
+
     - name: "Install Java"
       become: True
       apt:
-        name: openjdk-8-jre
+        name: openjdk-8-jre        
         
     - name: "Upload border script"
       become: True
@@ -39,7 +61,16 @@
           BOARD: remote-revb          
           MOTES: "{{ border_router_mote_device }}"
 
-    - shell: "sudo chmod 775 /opt/Webruns-Gateway-release/ver0.0/Gateways;( ( sudo nohup /opt/Webruns-Gateway-release/ver0.0/Gateways 1>/dev/null 2>&1 ) & )"
+    - shell: "sudo chmod -R 775 /opt/Webruns-Gateway-release/ver0.0/*; sudo cp /opt/Webruns-Gateway-release/ver0.0/script/wrio.service /etc/systemd/system/"
       async: 5
       poll: 0
+      
+    - shell: "sudo systemctl start wrio; sudo systemctl enable wrio"
+      async: 5
+      poll: 0
+
+#    - shell: "sudo chmod 775 /opt/Webruns-Gateway-release/ver0.0/Gateways;( ( sudo nohup /opt/Webruns-Gateway-release/ver0.0/Gateways 1>/dev/null 2>&1 ) & )"
+#      async: 5
+#      poll: 0
+      
 
