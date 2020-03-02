@@ -7,7 +7,7 @@
     </sliver_type>
     <location xmlns="http://jfed.iminds.be/rspec/ext/jfed/1" x="123.5" y="202.5"/>
   </node>
-  <node client_id="sensor" exclusive="true" component_manager_id="urn:publicid:IDN+wilab1.ilabt.iminds.be+authority+cm" component_id="urn:publicid:IDN+wilab1.ilabt.iminds.be+node+nuc10-36">
+  <node client_id="sensor" exclusive="true" component_manager_id="urn:publicid:IDN+wilab1.ilabt.iminds.be+authority+cm" component_id="urn:publicid:IDN+wilab1.ilabt.iminds.be+node+nuc10-1">
     <sliver_type name="raw-pc">
       <disk_image name="urn:publicid:IDN+wilab1.ilabt.iminds.be+image+emulab-ops:UBUNTU16-64-wilab"/>
     </sliver_type>
