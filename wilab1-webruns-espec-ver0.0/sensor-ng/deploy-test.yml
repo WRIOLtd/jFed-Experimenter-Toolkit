@@ -51,6 +51,10 @@
         repo: https://github.com/YAS-CODE/Webruns-Gateway-release.git
         dest: /opt/Webruns-Gateway-release
 
+    - shell: "sudo ./opt/cycle-power-motes.sh"
+      async: 5
+      poll: 0
+      
     - name: "Build and upload Toggle to mote on {{ border_router_mote_device }}"
       become: True
       make: 
